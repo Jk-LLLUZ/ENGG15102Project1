@@ -23,17 +23,17 @@ void parseFromFile() {
 
     // Get the names of the x and y value files
     cout << "What is the name of the x value file?" << endl;
-    cin >> record.xname;
-    record.xname += ".txt"; // Append ".txt" to the filename
+    cin >> xDataFileName;
+    xDataFileName += ".txt"; // Append ".txt" to the filename
 
     cout << "What is the name of the y value file?" << endl;
-    cin >> record.yname;
-    record.yname += ".txt"; // Append ".txt" to the filename
+    cin >> yDataFileName;
+    yDataFileName += ".txt"; // Append ".txt" to the filename
 
     vector<Record> records;
 
     // Parse the x value file
-    ifstream xInputFile(record.xname);
+    ifstream xInputFile(xDataFileName);
     if (!xInputFile) {
         cerr << "Error opening the x value file." << endl;
         return;
@@ -55,7 +55,7 @@ void parseFromFile() {
     xInputFile.close();
 
     // Parse the y value file
-    ifstream yInputFile(record.yname);
+    ifstream yInputFile(yDataFileName);
     if (!yInputFile) {
         cerr << "Error opening the y value file." << endl;
         return;
