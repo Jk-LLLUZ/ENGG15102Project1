@@ -16,12 +16,14 @@ struct Record {
 };
 vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFileName) {
     vector<Record> records;
+
     // Parse the x value file
     ifstream xInputFile(xDataFileName);
     if (!xInputFile) {
         cerr << "Error opening the x value file." << endl;
         return records;
     }
+
     string line;
     while (getline(xInputFile, line)) {
         try {
@@ -32,20 +34,26 @@ vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFi
             records.push_back(newRecord);
         } catch (const invalid_argument& e) {
             cerr << "Invalid data found in x value file: " << line << endl;
+            // Skip this line and continue parsing
         }
     }
+
     xInputFile.close();
+
     // Parse the y value file
     ifstream yInputFile(yDataFileName);
     if (!yInputFile) {
         cerr << "Error opening the y value file." << endl;
         return records;
     }
+
     size_t currentIndex = 0; // Keep track of the current index in 'records'
+
     while (getline(yInputFile, line)) {
         try {
             // Convert the line to an integer and store it in the vector
             int yValue = stoi(line);
+
             if (currentIndex < records.size()) {
                 // Assign the y value to the corresponding x value
                 records[currentIndex].yraw = yValue;
@@ -56,11 +64,15 @@ vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFi
             }
         } catch (const invalid_argument& e) {
             cerr << "Invalid data found in y value file: " << line << endl;
+            // Skip this line and continue parsing
         }
     }
+
     yInputFile.close();
+
     return records;
 }
+
 void normCrossCorr()
 {
     //calculations go here
