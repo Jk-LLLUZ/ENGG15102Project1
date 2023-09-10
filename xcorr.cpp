@@ -10,28 +10,23 @@
 
 using namespace std;
 
-struct Record {
-    int xraw;
-    int yraw;
-};
-vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFileName) {
-    vector<Record> records;
+pair<vector<int>, vector<int>> parseFromFiles(const string& xDataFileName, const string& yDataFileName) {
+    vector<int> xrawValues;
+    vector<int> yrawValues;
 
     // Parse the x value file
     ifstream xInputFile(xDataFileName);
     if (!xInputFile) {
         cerr << "Error opening the x value file." << endl;
-        return records;
+        return make_pair(xrawValues, yrawValues); // Return empty vectors
     }
 
     string line;
     while (getline(xInputFile, line)) {
         try {
-            // Convert the line to an integer and store it in the vector
+            // Convert the line to an integer and store it in the xraw vector
             int xValue = stoi(line);
-            Record newRecord;
-            newRecord.xraw = xValue;
-            records.push_back(newRecord);
+            xrawValues.push_back(xValue);
         } catch (const invalid_argument& e) {
             cerr << "Invalid data found in x value file: " << line << endl;
             // Skip this line and continue parsing
@@ -44,24 +39,14 @@ vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFi
     ifstream yInputFile(yDataFileName);
     if (!yInputFile) {
         cerr << "Error opening the y value file." << endl;
-        return records;
+        return make_pair(xrawValues, yrawValues); // Return empty vectors
     }
-
-    size_t currentIndex = 0; // Keep track of the current index in 'records'
 
     while (getline(yInputFile, line)) {
         try {
-            // Convert the line to an integer and store it in the vector
+            // Convert the line to an integer and store it in the yraw vector
             int yValue = stoi(line);
-
-            if (currentIndex < records.size()) {
-                // Assign the y value to the corresponding x value
-                records[currentIndex].yraw = yValue;
-                currentIndex++;
-            } else {
-                cerr << "More y values found than x values." << endl;
-                break; // Stop parsing if there are more y values than x values
-            }
+            yrawValues.push_back(yValue);
         } catch (const invalid_argument& e) {
             cerr << "Invalid data found in y value file: " << line << endl;
             // Skip this line and continue parsing
@@ -70,36 +55,41 @@ vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFi
 
     yInputFile.close();
 
-    return records;
+    return make_pair(xrawValues, yrawValues);
 }
 
-void normCrossCorr()
-{
-    //calculations go here
+void normCrossCorr(const vector<int>& xrawValues, const vector<int>& yrawValues) {
+    // Calculate cross-correlation using xrawValues and yrawValues
+    // Implement your cross-correlation logic here
 }
+
 int main(int argc, char* argv[]) {
-    cout
-            << "please call the program in the format \n > xcorr [xdata] [ydata] [outputfile] \n where each of the bracketed terms are the respective file names."<< endl;
+    cout << "please call the program in the format \n > xcorr [xdata] [ydata] [outputfile] \n where each of the bracketed terms are the respective file names." << endl;
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " [xdata] [ydata] [output file]" << endl;
         return 1;
     }
+
     string programName = argv[0];
     string xDataFileName = argv[1];
     string yDataFileName = argv[2];
     string outputFileName = argv[3];
+
     if (programName != "xcorr") {
         cerr << "Usage: " << programName << " [xdata] [ydata] [output file]" << endl;
         return 1;
     }
-    vector<Record> records = parseFromFiles(xDataFileName, yDataFileName);
-    // Now, 'records' vector contains the parsed data
-    for (const Record& rec : records) {
-        cout << "xraw: " << rec.xraw << ", yraw: " << rec.yraw << endl;
-    }
-    // Implement cross-correlation here using 'records'
+
+    pair<vector<int>, vector<int>> rawValues = parseFromFiles(xDataFileName, yDataFileName);
+
+    vector<int> xrawValues = rawValues.first;
+    vector<int> yrawValues = rawValues.second;
+
+    // Now, 'xrawValues' vector contains the parsed xraw data
+    // and 'yrawValues' vector contains the parsed yraw data
+
+    // Implement cross-correlation using 'xrawValues' and 'yrawValues'
+    normCrossCorr(xrawValues, yrawValues);
+
     return 0;
 }
-
-
-
