@@ -10,7 +10,11 @@
 #include <stdexcept>
 #include <cctype>
 
+
 using namespace std;
+
+
+void FileLineReader(string inputfile1);
 
 bool firstLineInputValidation(string lineToCheck)
 {
@@ -106,6 +110,9 @@ void parseFromFile(string inputfile1, string inputfile2)
       cout << "index = " << index1 <<endl;
 
       signalData1.push_back(stod(firstLine1));
+
+      
+
      }
     }
 
@@ -159,27 +166,70 @@ void parseFromFile(string inputfile1, string inputfile2)
 
 
     //parse the rest into signalData
-      string line1;
-      while (getline(fileToParse1, line1))
-      {
-          double value = stod(line1);
-          signalData1.push_back(value);
-      }
+        string line1;
+        while (getline(fileToParse1, line1))
+        {
+        try {
+        double value = stod(line1);
+        signalData1.push_back(value);
+        } catch (const std::invalid_argument& e) {
+        // Handle invalid argument exception (e.g., log an error, skip the line, etc.)
+        cerr << "Error parsing line as double: " << line1 << endl;
+        } catch (const std::out_of_range& e) {
+        // Handle out of range exception (e.g., log an error, skip the line, etc.)
+        cerr << "Value out of range: " << line1 << endl;
+        }
 
-      // Parse the rest into signalData for the second signal
-      string line2;
-      while (getline(fileToParse2, line2))
-      {
-          double value = stod(line2);
-          signalData2.push_back(value);
-      }
-    //set duration according to how big the vector is
-      duration1 = signalData1.size();
-      duration2 = signalData2.size();
-      cout << "Duration of the first signal is " << duration1 << endl;
-      cout << "Duration of the second signal is " << duration2 << endl;
-  }
+
+        }
+
+        string line2;
+        while (getline(fileToParse2, line2))
+        {
+            try {
+                double value = stod(line2);
+                signalData2.push_back(value);
+            } catch (const std::invalid_argument& e) {
+                // Handle invalid argument exception (e.g., log an error, skip the line, etc.)
+                cerr << "Error parsing line as double: " << line2 << endl;
+            } catch (const std::out_of_range& e) {
+                // Handle out of range exception (e.g., log an error, skip the line, etc.)
+                cerr << "Value out of range: " << line2 << endl;
+            }
+        }
+
+        // Calculate durations
+        duration1 = signalData1.size();
+        duration2 = signalData2.size();
+        cout << "Duration of the first signal is " << duration1 << endl;
+        cout << "Duration of the second signal is " << duration2 << endl;
+
+}
+
+   
+
 };
+
+
+
+bool readFile(const string& filename, vector<string>& amazing) {
+    ifstream file(filename);
+
+    if (!file.is_open()) {
+        cerr << "Error: Could not open file '" << filename << "'" << endl;
+        return false;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        amazing.push_back(line); 
+        cout << line << endl; 
+    }
+
+    file.close();
+    return true;
+}
+
 
 
 void normCrossCorr()
@@ -211,6 +261,27 @@ int main(int argc, char* argv[]) {
 
  xData.parseFromFile(xDataFileName,yDataFileName);
  
+    string filename = xDataFileName;
+    vector<string> amazing; // Change "lines" to "amazing"
+
+    if (readFile(filename, amazing)) { // Change "lines" to "amazing"
+        cout << "File '" << filename << "' successfully read." << endl;
+    }
+
+        string filename2 = yDataFileName;
+    vector<string> amazing2; // Change "lines" to "amazing"
+
+    if (readFile(filename2, amazing)) { // Change "lines" to "amazing"
+        cout << "File '" << filename2 << "' successfully read." << endl;
+    }
+
+   
+
+    
+
+
+
+
 return 0;
 }
 
