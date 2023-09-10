@@ -7,8 +7,30 @@
 #include <vector>
 #include <fstream>
 #include <stdexcept>
+#include <cctype>
 
 using namespace std;
+
+bool firstLineInputValidation(string lineToCheck)
+{
+ int spaceCount;
+
+ for(char c : lineToCheck)
+ {
+  if (isspace(c))
+  {
+   spaceCount++;
+  }
+ }
+
+ if(spaceCount>0)
+ {
+  return 1; //yes there is an index
+ } else
+ {
+  return 0; //no there is no index provided
+ }
+}
 
 class Signal
 {
@@ -29,7 +51,19 @@ class Signal
     {
      string firstLine;
 
+     getline(fileToParse, firstLine);
+
      cout << "first line: \t" << firstLine << endl;
+
+     bool isThereIndex = firstLineInputValidation(firstLine);
+
+     if (isThereIndex == 1)
+     {
+      cout << "yes theres index" << endl;
+     } if (isThereIndex == 0)
+     {
+      cout << "no no index" << endl;
+     }
     }
     //set index
     //parse the rest into signalData
