@@ -89,7 +89,13 @@ class Signal
     }
     
     //parse the rest into signalData
-    
+      string line;
+      while (getline(fileToParse, line))
+      {
+          // Convert the line to a double and add it to the vector
+          double value = stod(line);
+          signalData.push_back(value);
+      }
     //set duration according to how big the vector is
     duration = signalData.size();
     cout << "Duration is "<< duration << endl;
