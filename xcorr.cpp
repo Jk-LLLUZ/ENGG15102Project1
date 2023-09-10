@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <stdexcept>
@@ -14,14 +15,18 @@ using namespace std;
 bool firstLineInputValidation(string lineToCheck)
 {
  int spaceCount;
+ bool firstC = false;
 
  for(char c : lineToCheck)
  {
-  if (isspace(c))
+  if (firstC && isspace(c))
   {
    spaceCount++;
   }
+  firstC = true;
  }
+
+ cout << "space count: " << spaceCount << endl;
 
  if(spaceCount>0)
  {
@@ -49,6 +54,7 @@ class Signal
      cout << "could not open " << inputfile << " to be parsed" << endl;
     } else
     {
+     //first line parsing
      string firstLine;
 
      getline(fileToParse, firstLine);
@@ -60,12 +66,28 @@ class Signal
      if (isThereIndex == 1)
      {
       cout << "yes theres index" << endl;
+
+      istringstream divideFirstLine(firstLine);
+      
+      string strIndex, strFirstValue;
+      divideFirstLine >> strIndex >> strFirstValue;
+
+      cout << "index: " << strIndex << "\t first: " << strFirstValue << endl;
+
+      this->index = stoi(strIndex);
+      signalData.push_back(stod(strFirstValue));
+
+      cout << "index int works: " << this->index << "\t first value in vector works: " << signalData[0] << endl;
+
      } if (isThereIndex == 0)
      {
       cout << "no no index" << endl;
+      this->index = 0;
+
+      signalData.push_back(stod(firstLine));
      }
     }
-    //set index
+    
     //parse the rest into signalData
     //set duration according to how big the vector is
   }
