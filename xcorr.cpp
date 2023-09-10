@@ -14,41 +14,52 @@ using namespace std;
 
 bool firstLineInputValidation(string lineToCheck)
 {
- int spaceCount;
- bool firstC = false;
+    int spaceCount = 0; // Initialize spaceCount to 0
+    bool firstC = false;
 
- for(char c : lineToCheck)
- {
-  if (firstC && isspace(c))
-  {
-   spaceCount++;
-  }
-  firstC = true;
- }
+    for (char c : lineToCheck)
+    {
+        if (!firstC && isspace(c))
+        {
+            // Skip leading spaces
+        }
+        else if (firstC && isspace(c))
+        {
+            spaceCount++;
+        }
+        else
+        {
+            firstC = true;
+        }
+    }
 
- cout << "space count: " << spaceCount << endl;
+    cout << "space count: " << spaceCount << endl;
 
- if(spaceCount>0)
- {
-  return 1; //yes there is an index
- } else
- {
-  return 0; //no there is no index provided
- }
+    if (spaceCount > 0)
+    {
+        return true; // Yes, there are spaces in the input
+    }
+    else
+    {
+        return false; // No, there are no spaces in the input
+    }
 }
+
+
+
 
 class Signal
 {
- public:
-  vector<double> signalData1;
-  vector<double> signalData2;
-  int index1;
-  int index2;
-  size_t duration1;
-  size_t duration2;
+public:
+vector<double> signalData1;
+vector<double> signalData2;
+int index1;
+int index2;
+size_t duration1;
+size_t duration2;
 
-  void parseFromFile(string inputfile1, string inputfile2)
-  {
+void parseFromFile(string inputfile1, string inputfile2)
+{
     //parse and input validate first line
     ifstream fileToParse1(inputfile1);
 
@@ -57,6 +68,8 @@ class Signal
      cout << "could not open " << inputfile1 << " to be parsed" << endl;
     } else
     {
+    
+    
      //first line parsing
      string firstLine1;
 
@@ -64,11 +77,13 @@ class Signal
 
      cout << "first line: \t" << firstLine1 << endl;
 
+     
+
      bool isThereIndex1 = firstLineInputValidation(firstLine1);
 
      if (isThereIndex1 == 1)
      {
-      cout << "yes theres index" << endl;
+      cout << "yes there's index" << endl;
 
       istringstream divideFirstLine(firstLine1);
       
@@ -82,10 +97,13 @@ class Signal
 
       cout << "index int works: " << this->index1 << "\t first value in vector works: " << signalData1[0] << endl;
 
-     } if (isThereIndex1 == 0)
+     } 
+     if (isThereIndex1 == 0)
      {
-      cout << "no no index" << endl;
+      cout << "there's no index therefore index = 0" <<  endl;
       this->index1 = 0;
+
+      cout << "index = " << index1 <<endl;
 
       signalData1.push_back(stod(firstLine1));
      }
@@ -129,8 +147,10 @@ class Signal
 
           } if (isThereIndex2 == 0)
           {
-              cout << "no no index" << endl;
+              cout << "there is no index therefore index = 0" << endl;
               this->index2 = 0;
+
+              cout << "index =" << index2 << endl;
 
               signalData2.push_back(stod(firstLine2));
           }
@@ -191,9 +211,7 @@ int main(int argc, char* argv[]) {
 
  xData.parseFromFile(xDataFileName,yDataFileName);
  
-
-
-    return 0;
+return 0;
 }
 
 
