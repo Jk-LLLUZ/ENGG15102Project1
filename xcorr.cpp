@@ -265,7 +265,58 @@ int main(int argc, char* argv[]) {
 
     }
     //shift
-
+    //x shift
+    double elementx;
+    if (xData.index<0)
+    {
+        for (int i = 0; i > xData.index; --i)
+        {
+            elementx = xn[0];
+            for (int j = 0; j < xData.duration - 1; ++j)
+            {
+                xn[i]=xn[i+1];
+            }
+            xn[xData.duration-1=elementx];
+        }
+    }
+    else
+    {
+        for (int i = 0; i < xData.index; ++i)
+        {
+            elementx = xn[i - 1];
+            for (int i = xData.duration - 1; i > 0; --i)
+            {
+                xn[i] = xn[i - 1];
+            }
+            xn[0] = elementx;
+        }
+    }
+    //shift y pretty much same code
+    double elementy;
+    if (yData.index<0)
+    {
+        for (int i = 0; i > yData.index; --i)
+        {
+            elementy = yn[0];
+            for (int j = 0; j < yData.duration - 1; ++j)
+            {
+                yn[i]=yn[i+1];
+            }
+            yn[yData.duration-1=elementy];
+        }
+    }
+    else
+    {
+        for (int i = 0; i < yData.index; ++i)
+        {
+            elementy = yn[i - 1];
+            for (int i = yData.duration - 1; i > 0; --i)
+            {
+                yn[i] = yn[i - 1];
+            }
+            yn[0] = elementy;
+        }
+    }
     //autocorrelation for denomin
 
     //cross corr
