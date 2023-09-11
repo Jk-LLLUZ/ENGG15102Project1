@@ -190,8 +190,6 @@ int main(int argc, char* argv[]) {
  Signal yData;
 
  xData.parseFromFile(xDataFileName,yDataFileName);
- 
-
 
     return 0;
 }
