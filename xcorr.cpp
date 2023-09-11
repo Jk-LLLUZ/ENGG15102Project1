@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <stdexcept>
@@ -14,14 +15,19 @@ using namespace std;
 bool firstLineInputValidation(string lineToCheck)
 {
  int spaceCount;
+ bool firstC = false;
 
  for(char c : lineToCheck)
  {
   if (isspace(c))
+  if (firstC && isspace(c))
   {
    spaceCount++;
   }
+  firstC = true;
  }
+
+ cout << "space count: " << spaceCount << endl;
 
  if(spaceCount>0)
  {
@@ -36,20 +42,20 @@ class Signal
 {
  public:
   vector<double> signalData;
-  
   int index;
   int duration;
 
-  void parseFromFile(string inputfile1, string inputfile2)
+  void parseFromFile(string inputfile)
   {
     //parse and input validate first line
-    ifstream fileToParse(inputfile1);
+    ifstream fileToParse(inputfile);
 
     if(!fileToParse)
     {
-     cout << "could not open " << inputfile1 << " to be parsed" << endl;
+     cout << "could not open " << inputfile << " to be parsed" << endl;
     } else
     {
+     //first line parsing
      string firstLine;
 
      getline(fileToParse, firstLine);
@@ -61,35 +67,85 @@ class Signal
      if (isThereIndex == 1)
      {
       cout << "yes theres index" << endl;
+
+      istringstream divideFirstLine(firstLine);
+      
+      string strIndex, strFirstValue;
+      divideFirstLine >> strIndex >> strFirstValue;
+
+      cout << "index: " << strIndex << "\t first: " << strFirstValue << endl;
+
+      this->index = stoi(strIndex);
+      signalData.push_back(stod(strFirstValue));
+
+      cout << "index int works: " << this->index << "\t first value in vector works: " << signalData[0] << endl;
+
      } if (isThereIndex == 0)
      {
       cout << "no no index" << endl;
+      this->index = 0;
+
+      signalData.push_back(stod(firstLine));
      }
     }
     //set index
+    
     //parse the rest into signalData
-      string line;
-      while (getline(fileToParse, line))
-      {
-          double value = stod(line);
-          signalData.push_back(value);
-      }
-
-      // Parse the rest into signalData for the second signal
-      string line;
-      while (getline(fileToParse, line))
-      {
-          double value = stod(line);
-          signalData.push_back(value);
-      }
     //set duration according to how big the vector is
-      duration = signalData1.size();
-      cout << "Duration of the first signal is " << duration1 << endl;
-      cout << "Duration of the second signal is " << duration2 << endl;
   }
 };
 
-
+// struct Record {
+//     int xraw;
+//     int yraw;
+// };
+// vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFileName) {
+//     vector<Record> records;
+//     // Parse the x value file
+//     ifstream xInputFile(xDataFileName);
+//     if (!xInputFile) {
+//         cerr << "Error opening the x value file." << endl;
+//         return records;
+//     }
+//     string line;
+//     while (getline(xInputFile, line)) {
+//         try {
+//             // Convert the line to an integer and store it in the vector
+//             int xValue = stoi(line);
+//             Record newRecord;
+//             newRecord.xraw = xValue;
+//             records.push_back(newRecord);
+//         } catch (const invalid_argument& e) {
+//             cerr << "Invalid data found in x value file: " << line << endl;
+//         }
+//     }
+//     xInputFile.close();
+//     // Parse the y value file
+//     ifstream yInputFile(yDataFileName);
+//     if (!yInputFile) {
+//         cerr << "Error opening the y value file." << endl;
+//         return records;
+//     }
+//     size_t currentIndex = 0; // Keep track of the current index in 'records'
+//     while (getline(yInputFile, line)) {
+//         try {
+//             // Convert the line to an integer and store it in the vector
+//             int yValue = stoi(line);
+//             if (currentIndex < records.size()) {
+//                 // Assign the y value to the corresponding x value
+//                 records[currentIndex].yraw = yValue;
+//                 currentIndex++;
+//             } else {
+//                 cerr << "More y values found than x values." << endl;
+//                 break; // Stop parsing if there are more y values than x values
+//             }
+//         } catch (const invalid_argument& e) {
+//             cerr << "Invalid data found in y value file: " << line << endl;
+//         }
+//     }
+//     yInputFile.close();
+//     return records;
+// }
 void normCrossCorr()
 {
     //calculations go here
@@ -115,10 +171,15 @@ int main(int argc, char* argv[]) {
  outputFileName = argv[3];
 
  Signal xData;
- Signal yData;
 
- xData.parseFromFile(xDataFileName,yDataFileName);
+ xData.parseFromFile(xDataFileName);
 
+    // vector<Record> records = parseFromFiles(xDataFileName, yDataFileName);
+    // // Now, 'records' vector contains the parsed data
+    // for (const Record& rec : records) {
+    //     cout << "xraw: " << rec.xraw << ", yraw: " << rec.yraw << endl;
+    // }
+    // Implement cross-correlation here using 'records'
     return 0;
 }
 
