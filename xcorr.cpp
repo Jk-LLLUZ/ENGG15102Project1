@@ -87,65 +87,23 @@ class Signal
 
       signalData.push_back(stod(firstLine));
      }
+
+     //parse the rest into signalData
+     string parserNextValue;
+     while(getline(fileToParse, parserNextValue))
+     {
+        cout << parserNextValue << endl;
+        signalData.push_back(stod(parserNextValue));
+     }
+
+     //set duration
+     this->duration = signalData.size();
+
+     cout << "duration of signal is " << this->duration << endl;
     }
-    //set index
-    
-    //parse the rest into signalData
-    //set duration according to how big the vector is
   }
 };
 
-// struct Record {
-//     int xraw;
-//     int yraw;
-// };
-// vector<Record> parseFromFiles(const string& xDataFileName, const string& yDataFileName) {
-//     vector<Record> records;
-//     // Parse the x value file
-//     ifstream xInputFile(xDataFileName);
-//     if (!xInputFile) {
-//         cerr << "Error opening the x value file." << endl;
-//         return records;
-//     }
-//     string line;
-//     while (getline(xInputFile, line)) {
-//         try {
-//             // Convert the line to an integer and store it in the vector
-//             int xValue = stoi(line);
-//             Record newRecord;
-//             newRecord.xraw = xValue;
-//             records.push_back(newRecord);
-//         } catch (const invalid_argument& e) {
-//             cerr << "Invalid data found in x value file: " << line << endl;
-//         }
-//     }
-//     xInputFile.close();
-//     // Parse the y value file
-//     ifstream yInputFile(yDataFileName);
-//     if (!yInputFile) {
-//         cerr << "Error opening the y value file." << endl;
-//         return records;
-//     }
-//     size_t currentIndex = 0; // Keep track of the current index in 'records'
-//     while (getline(yInputFile, line)) {
-//         try {
-//             // Convert the line to an integer and store it in the vector
-//             int yValue = stoi(line);
-//             if (currentIndex < records.size()) {
-//                 // Assign the y value to the corresponding x value
-//                 records[currentIndex].yraw = yValue;
-//                 currentIndex++;
-//             } else {
-//                 cerr << "More y values found than x values." << endl;
-//                 break; // Stop parsing if there are more y values than x values
-//             }
-//         } catch (const invalid_argument& e) {
-//             cerr << "Invalid data found in y value file: " << line << endl;
-//         }
-//     }
-//     yInputFile.close();
-//     return records;
-// }
 void normCrossCorr()
 {
     //calculations go here
@@ -171,8 +129,15 @@ int main(int argc, char* argv[]) {
  outputFileName = argv[3];
 
  Signal xData;
-
+ 
+ cout << "parsing data from x file..." << endl;
  xData.parseFromFile(xDataFileName);
+
+ Signal yData;
+
+ cout << "parsing data from y file..." << endl;
+ yData.parseFromFile(yDataFileName);
+
 
     // vector<Record> records = parseFromFiles(xDataFileName, yDataFileName);
     // // Now, 'records' vector contains the parsed data
