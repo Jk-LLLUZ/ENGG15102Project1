@@ -55,61 +55,58 @@ bool firstLineInputValidation(string lineToCheck)
 class Signal
 {
 public:
-vector<double> signalData1;
-vector<double> signalData2;
-int index1;
-int index2;
-size_t duration1;
-size_t duration2;
+vector<double> signalData;
+int index;
+size_t duration;
 
-void parseFromFile(string inputfile1, string inputfile2)
+void parseFromFile(string inputfile)
 {
     //parse and input validate first line
-    ifstream fileToParse1(inputfile1);
+    ifstream fileToParse(inputfile);
 
-    if(!fileToParse1)
+    if(!fileToParse)
     {
-     cout << "could not open " << inputfile1 << " to be parsed" << endl;
+     cout << "could not open " << inputfile << " to be parsed" << endl;
     } else
     {
     
     
      //first line parsing
-     string firstLine1;
+     string firstLine;
 
-     getline(fileToParse1, firstLine1);
+     getline(fileToParse, firstLine);
 
-     cout << "first line: \t" << firstLine1 << endl;
+     cout << "first line: \t" << firstLine << endl;
 
      
 
-     bool isThereIndex1 = firstLineInputValidation(firstLine1);
+     bool isThereIndex = firstLineInputValidation(firstLine);
 
-     if (isThereIndex1 == 1)
+     if (isThereIndex == 1)
      {
       cout << "yes there's index" << endl;
 
-      istringstream divideFirstLine(firstLine1);
+      istringstream divideFirstLine(firstLine);
       
-      string strIndex1, strFirstValue1;
-      divideFirstLine >> strIndex1 >> strFirstValue1;
+      string strIndex, strFirstValue;
+      divideFirstLine >> strIndex >> strFirstValue;
 
-      cout << "index: " << strIndex1 << "\t first: " << strFirstValue1 << endl;
+      cout << "index: " << strIndex << "\t first: " << strFirstValue << endl;
 
-      this->index1 = stoi(strIndex1);
-      signalData1.push_back(stod(strFirstValue1));
+      this->index = stoi(strIndex);
+      signalData.push_back(stod(strFirstValue));
 
-      cout << "index int works: " << this->index1 << "\t first value in vector works: " << signalData1[0] << endl;
+      cout << "index int works: " << this->index << "\t first value in vector works: " << signalData[0] << endl;
 
      } 
-     if (isThereIndex1 == 0)
+     if (isThereIndex == 0)
      {
       cout << "there's no index therefore index = 0" <<  endl;
-      this->index1 = 0;
+      this->index = 0;
 
-      cout << "index = " << index1 <<endl;
+      cout << "index = " << index <<endl;
 
-      signalData1.push_back(stod(firstLine1));
+      signalData.push_back(stod(firstLine));
 
       
 
@@ -119,90 +116,33 @@ void parseFromFile(string inputfile1, string inputfile2)
 
 
 
-      //parse and input validate first line
-      ifstream fileToParse2(inputfile2);
-
-      if(!fileToParse2)
-      {
-          cout << "could not open " << inputfile2 << " to be parsed" << endl;
-      } else
-      {
-          //first line parsing
-          string firstLine2;
-
-          getline(fileToParse2, firstLine2);
-
-          cout << "first line: \t" << firstLine2 << endl;
-
-          bool isThereIndex2 = firstLineInputValidation(firstLine2);
-
-          if (isThereIndex2 == 1)
-          {
-              cout << "yes theres index" << endl;
-
-              istringstream divideFirstLine(firstLine2);
-
-              string strIndex2, strFirstValue2;
-              divideFirstLine >> strIndex2 >> strFirstValue2;
-
-              cout << "index: " << strIndex2 << "\t first: " << strFirstValue2 << endl;
-
-              this->index2 = stoi(strIndex2);
-              signalData2.push_back(stod(strFirstValue2));
-
-              cout << "index int works: " << this->index2 << "\t first value in vector works: " << signalData2[0] << endl;
-
-          } if (isThereIndex2 == 0)
-          {
-              cout << "there is no index therefore index = 0" << endl;
-              this->index2 = 0;
-
-              cout << "index =" << index2 << endl;
-
-              signalData2.push_back(stod(firstLine2));
-          }
-      }
 
 
 
     //parse the rest into signalData
-        string line1;
-        while (getline(fileToParse1, line1))
+        string line;
+        while (getline(fileToParse, line))
         {
         try {
-        double value = stod(line1);
-        signalData1.push_back(value);
+        double value = stod(line);
+        signalData.push_back(value);
         } catch (const std::invalid_argument& e) {
         // Handle invalid argument exception (e.g., log an error, skip the line, etc.)
-        cerr << "Error parsing line as double: " << line1 << endl;
+        cerr << "Error parsing line as double: " << line << endl;
         } catch (const std::out_of_range& e) {
         // Handle out of range exception (e.g., log an error, skip the line, etc.)
-        cerr << "Value out of range: " << line1 << endl;
+        cerr << "Value out of range: " << line << endl;
         }
 
 
         }
 
-        string line2;
-        while (getline(fileToParse2, line2))
-        {
-            try {
-                double value = stod(line2);
-                signalData2.push_back(value);
-            } catch (const std::invalid_argument& e) {
-                // Handle invalid argument exception (e.g., log an error, skip the line, etc.)
-                cerr << "Error parsing line as double: " << line2 << endl;
-            } catch (const std::out_of_range& e) {
-                // Handle out of range exception (e.g., log an error, skip the line, etc.)
-                cerr << "Value out of range: " << line2 << endl;
-            }
-        }
 
         // Calculate durations
-        duration1 = signalData1.size();
-        duration2 = signalData2.size();
-        cout << "Duration of the first signal is " << duration1 << endl;
-        cout << "Duration of the second signal is " << duration2 << endl;
+        duration = signalData.size();
+
+        cout << "Duration of the first signal is " << duration << endl;
+
 
 }
 
@@ -236,6 +176,23 @@ void normCrossCorr()
 {
     //calculations go here
 }
+/*void Average()
+{
+    void Ave(double xraw[], double yraw[], int xsize, int ysize, double &xaverage, double &yaverage)
+    {
+        for (int i = 0; i < xsize; i++)
+        {
+            xaverage += xraw[i];
+        }
+        xaverage = xaverage / xsize;
+
+        for (int i = 0; i < ysize; i++)
+        {
+            yaverage += yraw[i];
+        }
+        yaverage = yaverage / ysize;
+    }
+}*/
 
 int main(int argc, char* argv[]) {
  if (argc == 4)
@@ -259,7 +216,8 @@ int main(int argc, char* argv[]) {
  Signal xData;
  Signal yData;
 
- xData.parseFromFile(xDataFileName,yDataFileName);
+ xData.parseFromFile(xDataFileName);
+ xData.parseFromFile(yDataFileName);
  
     string filename = xDataFileName;
     vector<string> amazing; // Change "lines" to "amazing"
@@ -274,8 +232,33 @@ int main(int argc, char* argv[]) {
     if (readFile(filename2, amazing)) { // Change "lines" to "amazing"
         cout << "File '" << filename2 << "' successfully read." << endl;
     }
+    double xaverage;
+    double yaverage;
+    double xn;
+    double yn;
+    //Average(xData,yData,xData.duration,yData.duration,xaverage,yaverage);
+    for (int i = 0; i < xData.duration; i++)
+    {
+        xaverage += xData.signalData[i];
+    }
+    xaverage = xaverage / xData.duration;
 
-   
+    for (int i = 0; i < yData.duration; i++)
+    {
+        yaverage += yData.signalData[i];
+    }
+    yaverage = yaverage / yData.duration;
+    cout<<"Average of x: "<< xaverage << endl;
+    cout<<"Average of y: "<< yaverage << endl;
+    for (int i = 0; i < xData.duration; i++)
+    {
+        xn[i] = xData.signalData[i] - xaverage;
+    }
+
+    for (int i = 0; i < yData.duration; i++)
+    {
+        yn[i] = yData.signalData[i] - yaverage;
+    }
 
     
 
