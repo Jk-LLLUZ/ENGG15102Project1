@@ -234,8 +234,8 @@ int main(int argc, char* argv[]) {
     }
     double xaverage;
     double yaverage;
-    double xn;
-    double yn;
+    double xn[xData.duration];
+    double yn[yData.duration];
     //Average(xData,yData,xData.duration,yData.duration,xaverage,yaverage);
     for (int i = 0; i < xData.duration; i++)
     {
@@ -259,7 +259,10 @@ int main(int argc, char* argv[]) {
     {
         yn[i] = yData.signalData[i] - yaverage;
     }
+    for (int i = 0; i < 10; ++i) {
+        cout <<i<< xn[i] <<" "<<yn[i]<< endl;
 
+    }
     
 
 
