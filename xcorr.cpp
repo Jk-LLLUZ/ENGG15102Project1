@@ -195,39 +195,39 @@ void normCrossCorr()
 }*/
 
 int main(int argc, char* argv[]) {
- if (argc == 4)
- {
-  cout << "received file " << argv[1] << " for use as x values" << endl;
-  cout << "received file " << argv[2] << " for use as y values" << endl;
-  cout << "received file " << argv[3] << " for use as the output file" << endl;
- } else
- {
-  cout << "please call the program in the format \n > xcorr [xdata] [ydata] [outputfile] \n where each of the bracketed terms are the respective file names." << endl;
+    if (argc == 4) {
+        cout << "received file " << argv[1] << " for use as x values" << endl;
+        cout << "received file " << argv[2] << " for use as y values" << endl;
+        cout << "received file " << argv[3] << " for use as the output file" << endl;
+    } else {
+        cout
+                << "please call the program in the format \n > xcorr [xdata] [ydata] [outputfile] \n where each of the bracketed terms are the respective file names."
+                << endl;
 
-  return 0;
- }
- 
- string xDataFileName, yDataFileName, outputFileName;
+        return 0;
+    }
 
- xDataFileName = argv[1];
- yDataFileName = argv[2];
- outputFileName = argv[3];
+    string xDataFileName, yDataFileName, outputFileName;
 
- Signal xData;
- Signal yData;
+    xDataFileName = argv[1];
+    yDataFileName = argv[2];
+    outputFileName = argv[3];
 
- xData.parseFromFile(xDataFileName);
- xData.parseFromFile(yDataFileName);
- 
+    Signal xData;
+    Signal yData;
+
+    xData.parseFromFile(xDataFileName);
+    xData.parseFromFile(yDataFileName);
+
     string filename = xDataFileName;
-    vector<string> amazing; // Change "lines" to "amazing"
+    vector <string> amazing; // Change "lines" to "amazing"
 
     if (readFile(filename, amazing)) { // Change "lines" to "amazing"
         cout << "File '" << filename << "' successfully read." << endl;
     }
 
-        string filename2 = yDataFileName;
-    vector<string> amazing2; // Change "lines" to "amazing"
+    string filename2 = yDataFileName;
+    vector <string> amazing2; // Change "lines" to "amazing"
 
     if (readFile(filename2, amazing)) { // Change "lines" to "amazing"
         cout << "File '" << filename2 << "' successfully read." << endl;
@@ -236,56 +236,47 @@ int main(int argc, char* argv[]) {
     double yaverage;
     double xn[xData.duration];
     double yn[yData.duration];
+    int duration = xData.duration + yData.duration - 1;
     //Average(xData,yData,xData.duration,yData.duration,xaverage,yaverage);
-    for (int i = 0; i < xData.duration; i++)
-    {
+    for (int i = 0; i < xData.duration; i++) {
         xaverage += xData.signalData[i];
     }
     xaverage = xaverage / xData.duration;
 
-    for (int i = 0; i < yData.duration; i++)
-    {
+    for (int i = 0; i < yData.duration; i++) {
         yaverage += yData.signalData[i];
     }
     yaverage = yaverage / yData.duration;
-    cout<<"Average of x: "<< xaverage << endl;
-    cout<<"Average of y: "<< yaverage << endl;
+    cout << "Average of x: " << xaverage << endl;
+    cout << "Average of y: " << yaverage << endl;
     //getting xn and yn
-    for (int i = 0; i < xData.duration; i++)
-    {
+    for (int i = 0; i < duration; i++) {
         xn[i] = xData.signalData[i] - xaverage;
     }
 
-    for (int i = 0; i < yData.duration; i++)
-    {
+    for (int i = 0; i < duration; i++) {
         yn[i] = yData.signalData[i] - yaverage;
     }
+    //test lng
     for (int i = 0; i < 10; ++i) {
-        cout <<i<< xn[i] <<" "<<yn[i]<< endl;
+        cout << i << xn[i] << " " << yn[i] << endl;
 
     }
     //shift
     //x shift
     double elementx;
-    if (xData.index<0)
-    {
-        for (int i = 0; i > xData.index; --i)
-        {
+    if (xData.index < 0) {
+        for (int i = 0; i > xData.index; --i) {
             elementx = xn[0];
-            for (int j = 0; j < xData.duration - 1; ++j)
-            {
-                xn[i]=xn[i+1];
+            for (int j = 0; j < duration - 1; ++j) {
+                xn[i] = xn[i + 1];
             }
-            xn[xData.duration-1=elementx];
+            xn[duration - 1] = elementx;
         }
-    }
-    else
-    {
-        for (int i = 0; i < xData.index; ++i)
-        {
+    } else {
+        for (int i = 0; i < xData.index; ++i) {
             elementx = xn[i - 1];
-            for (int i = xData.duration - 1; i > 0; --i)
-            {
+            for (int i = duration - 1; i > 0; --i) {
                 xn[i] = xn[i - 1];
             }
             xn[0] = elementx;
@@ -293,32 +284,36 @@ int main(int argc, char* argv[]) {
     }
     //shift y pretty much same code
     double elementy;
-    if (yData.index<0)
-    {
-        for (int i = 0; i > yData.index; --i)
-        {
+    if (yData.index < 0) {
+        for (int i = 0; i > yData.index; --i) {
             elementy = yn[0];
-            for (int j = 0; j < yData.duration - 1; ++j)
-            {
-                yn[i]=yn[i+1];
+            for (int j = 0; j < duration - 1; ++j) {
+                yn[i] = yn[i + 1];
             }
-            yn[yData.duration-1=elementy];
+            yn[duration - 1] = elementy;
         }
-    }
-    else
-    {
-        for (int i = 0; i < yData.index; ++i)
-        {
+    } else {
+        for (int i = 0; i < yData.index; ++i) {
             elementy = yn[i - 1];
-            for (int i = yData.duration - 1; i > 0; --i)
-            {
+            for (int i = duration - 1; i > 0; --i) {
                 yn[i] = yn[i - 1];
             }
             yn[0] = elementy;
         }
     }
     //autocorrelation for denomin
+    double sumsquarex;
+    double sumsquarey;
+    for (int i = 0; i < xData.duration; ++i)
+    {
+        sumsquarex += (xn[i] * xn[i]);
+    }
 
+    for (int i = 0; i < duration; ++i) {
+        sumsquarey += (yn[i] * yn[i]);
+    }
+    //return sumsquarey;
+    //return sumsquarex;
     //cross corr
 
     // normalize
