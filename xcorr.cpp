@@ -250,6 +250,7 @@ int main(int argc, char* argv[]) {
     yaverage = yaverage / yData.duration;
     cout<<"Average of x: "<< xaverage << endl;
     cout<<"Average of y: "<< yaverage << endl;
+    //getting xn and yn
     for (int i = 0; i < xData.duration; i++)
     {
         xn[i] = xData.signalData[i] - xaverage;
@@ -263,7 +264,13 @@ int main(int argc, char* argv[]) {
         cout <<i<< xn[i] <<" "<<yn[i]<< endl;
 
     }
-    
+    //shift
+
+    //autocorrelation for denomin
+
+    //cross corr
+
+    // normalize
 
 
 
