@@ -364,15 +364,27 @@ int main(int argc, char* argv[]) {
 
     //put into output file
     ofstream output(argv[3]);
-    cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
-    output << shift << "\t" << normcorr[0] << endl;
-    cout << shift << ":\t" << normcorr[0] << endl;
-    for (int i = 0; i < duration-1; ++i)
+    if (duration < 20)
     {
-        cout << shift + i + 1 << ":\t" << normcorr[i + 1] << endl;
-        output << "\t" << normcorr[i + 1] << endl;
+        cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
+        output << shift << "\t" << normcorr[0] << endl;
+        cout << shift << ":\t" << normcorr[0] << endl;
+        for (int i = 0; i < duration - 1; ++i)
+        {
+            cout << shift + i + 1 << ":\t" << normcorr[i + 1] << endl;
+            output << "\t" << normcorr[i + 1] << endl;
+        }
     }
-
+    else
+    {
+        cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
+        output << shift << "\t" << normcorr[0] << endl;
+        cout << shift << "Output duration too long for console file generated instead"<< endl;
+        for (int i = 0; i < duration - 1; ++i)
+        {
+            output << "\t" << normcorr[i + 1] << endl;
+        }
+    }
 
     output.close();
 
