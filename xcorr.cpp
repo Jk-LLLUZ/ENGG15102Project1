@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <cctype>
+#include <cmath>
 
 
 using namespace std;
@@ -334,6 +335,7 @@ int main(int argc, char* argv[]) {
 
     // normalize
     double *normcorr = new double[duration];
+    //double normcorr[duration];
     for (int i = 0; i < duration; i++)
     {
         normcorr[i] = crosscorr[i] / (sqrt(sumsquarex * sumsquarey));
@@ -355,7 +357,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i > shift; --i)
     {
         double tempvar = normcorr[0];
-        for (int j = 0; j < duration - 1; ++i)
+        for (int j = 0; j < duration - 1; i++)
         {
             normcorr[j] = normcorr[j + 1];
         }
