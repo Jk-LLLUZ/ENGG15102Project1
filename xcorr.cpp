@@ -315,11 +315,66 @@ int main(int argc, char* argv[]) {
     //return sumsquarey;
     //return sumsquarex;
     //cross corr
+    double crosscorr[duration];
+    for (int i = 0; i < duration; ++i)
+    {
+        for (int j = 0; j < duration; ++j)
+        {
+            crosscorr[i] += (xn[j] * yn[j]);
+        }
+        double hold;
+        //placeholder
+        hold = yn[duration - 1];
+        for (int i = duration - 1; i > 0; --i)
+        {
+            yn[i] = yn[i - 1];
+        }
+        yn[0] = hold;
+    }
 
     // normalize
+    double *normcorr = new double[duration];
+    for (int i = 0; i < duration; i++)
+    {
+        normcorr[i] = crosscorr[i] / (sqrt(sumsquarex * sumsquarey));
+    }
+    //Shift
+    int indexdiff = abs(xData.index) - abs(yData.index);
+    int shift;
+    if (xData.duration > yData.duration)
+    {
+        shift = indexdiff - xData.duration + 1;
+    }
+    else
+    {
+        shift = indexdiff - yData.duration + 1;
+    }
+    //shift normcorr
 
 
+    for (int i = 0; i > shift; --i)
+    {
+        double tempvar = normcorr[0];
+        for (int j = 0; j < duration - 1; ++i)
+        {
+            normcorr[j] = normcorr[j + 1];
+        }
+        normcorr[duration - 1] = tempvar;
+    }
 
+    //put into output file
+    ofstream output(argv[3]);
+    cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
+    output << shift << "\t" << normcorr[0] << endl;
+    cout << shift << ":\t" << normcorr[0] << endl;
+    for (int i = 0; i < duration-1; ++i)
+    {
+        cout << shift + i + 1 << ":\t" << normcorr[i + 1] << endl;
+        output << "\t" << normcorr[i + 1] << endl;
+    }
+
+
+    output.close();
 
 return 0;
 }
