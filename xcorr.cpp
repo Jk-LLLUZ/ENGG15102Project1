@@ -265,7 +265,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i > shift; --i)
     {
         double tempvar = normcorr[0];
-        for (int j = 0; j < duration - 1; i++)
+        for (int j = 0; j < duration - 1; j++)
         {
             normcorr[j] = normcorr[j + 1];
         }
