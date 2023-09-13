@@ -105,11 +105,6 @@ class Signal
   }
 };
 
-void normCrossCorr()
-{
-    //calculations go here
-}
-
 int main(int argc, char* argv[]) {
  if (argc == 4)
  {
@@ -170,49 +165,11 @@ int main(int argc, char* argv[]) {
     }
 
     // Test
-    for (int i = 0; i < 10; ++i) {
-        cout << i << " " << xn[i] << " " << yn[i] << endl;
-    }
-    /*shift
-    //x shift
-    double elementx;
-    if (xData.index < 0) {
-        for (int i = 0; i > xData.index; --i) {
-            elementx = xn[0];
-            for (int j = 0; j < duration - 1; ++j) {
-                xn[i] = xn[i + 1];
-            }
-            xn[duration - 1] = elementx;
-        }
-    } else {
-        for (int i = 0; i < xData.index; ++i) {
-            elementx = xn[i - 1];
-            for (int i = duration - 1; i > 0; --i) {
-                xn[i] = xn[i - 1];
-            }
-            xn[0] = elementx;
-        }
-    }
-    //shift y pretty much same code
-    double elementy;
-    if (yData.index < 0) {
-        for (int i = 0; i > yData.index; --i) {
-            elementy = yn[0];
-            for (int j = 0; j < duration - 1; ++j) {
-                yn[i] = yn[i + 1];
-            }
-            yn[duration - 1] = elementy;
-        }
-    } else {
-        for (int i = 0; i < yData.index; ++i) {
-            elementy = yn[i - 1];
-            for (int i = duration - 1; i > 0; --i) {
-                yn[i] = yn[i - 1];
-            }
-            yn[0] = elementy;
-        }
-    }*/
-    //autocorrelation for denomin
+    //for (int i = 0; i < 10; ++i) {
+    //    cout << i << " " << xn[i] << " " << yn[i] << endl;
+    //}
+
+    //autocorrelation for denominator
     double sumsquarex;
     double sumsquarey;
     for (int i = 0; i < xData.duration; ++i)
@@ -223,8 +180,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < yData.duration; ++i) {
         sumsquarey += (yn[i] * yn[i]);
     }
-    //return sumsquarey;
-    //return sumsquarex;
+
     //cross corr
     double crosscorr[duration];
     for (int i = 0; i < duration; ++i)
@@ -243,11 +199,8 @@ int main(int argc, char* argv[]) {
         yn[0] = hold;
     }
 
-
-
     // normalize
     double *normcorr = new double[duration];
-    //double normcorr[duration];
     for (int i = 0; i < duration; i++)
     {
         normcorr[i] = crosscorr[i] / (sqrt(sumsquarex * sumsquarey));
@@ -264,8 +217,7 @@ int main(int argc, char* argv[]) {
         shift = indexdiff - yData.duration + 1;
     }
     //shift normcorr
-
-
+    
     for (int i = 0; i > shift; --i)
     {
         double tempvar = normcorr[0];
