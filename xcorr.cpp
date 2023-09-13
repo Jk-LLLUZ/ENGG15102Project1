@@ -217,7 +217,7 @@ int main(int argc, char* argv[]) {
         shift = indexdiff - yData.duration + 1;
     }
     //shift normcorr
-    
+
     for (int i = 0; i > shift; --i)
     {
         double tempvar = normcorr[0];
