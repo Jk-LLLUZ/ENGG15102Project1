@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <cctype>
+#include <cmath>
 
 using namespace std;
 
@@ -139,12 +140,168 @@ int main(int argc, char* argv[]) {
  yData.parseFromFile(yDataFileName);
 
 
-    // vector<Record> records = parseFromFiles(xDataFileName, yDataFileName);
-    // // Now, 'records' vector contains the parsed data
-    // for (const Record& rec : records) {
-    //     cout << "xraw: " << rec.xraw << ", yraw: " << rec.yraw << endl;
-    // }
-    // Implement cross-correlation here using 'records'
+    double xaverage = 0.0;
+    double yaverage = 0.0;
+    int duration = xData.duration + yData.duration - 1;
+
+    for (int i = 0; i < xData.duration; i++) {
+        xaverage += xData.signalData[i];
+    }
+    xaverage /= xData.duration;
+
+    for (int i = 0; i < yData.duration; i++) {
+        yaverage += yData.signalData[i];
+    }
+    yaverage /= yData.duration;
+
+    cout << "Average of x: " << xaverage << endl;
+    cout << "Average of y: " << yaverage << endl;
+
+    // Getting xn and yn
+    double xn[duration];
+    double yn[duration];
+
+    for (int i = 0; i < xData.duration; i++) {
+        xn[i] = xData.signalData[i] - xaverage;
+    }
+
+    for (int i = 0; i < yData.duration; i++) {
+        yn[i] = yData.signalData[i] - yaverage;
+    }
+
+    // Test
+    for (int i = 0; i < 10; ++i) {
+        cout << i << " " << xn[i] << " " << yn[i] << endl;
+    }
+    /*shift
+    //x shift
+    double elementx;
+    if (xData.index < 0) {
+        for (int i = 0; i > xData.index; --i) {
+            elementx = xn[0];
+            for (int j = 0; j < duration - 1; ++j) {
+                xn[i] = xn[i + 1];
+            }
+            xn[duration - 1] = elementx;
+        }
+    } else {
+        for (int i = 0; i < xData.index; ++i) {
+            elementx = xn[i - 1];
+            for (int i = duration - 1; i > 0; --i) {
+                xn[i] = xn[i - 1];
+            }
+            xn[0] = elementx;
+        }
+    }
+    //shift y pretty much same code
+    double elementy;
+    if (yData.index < 0) {
+        for (int i = 0; i > yData.index; --i) {
+            elementy = yn[0];
+            for (int j = 0; j < duration - 1; ++j) {
+                yn[i] = yn[i + 1];
+            }
+            yn[duration - 1] = elementy;
+        }
+    } else {
+        for (int i = 0; i < yData.index; ++i) {
+            elementy = yn[i - 1];
+            for (int i = duration - 1; i > 0; --i) {
+                yn[i] = yn[i - 1];
+            }
+            yn[0] = elementy;
+        }
+    }*/
+    //autocorrelation for denomin
+    double sumsquarex;
+    double sumsquarey;
+    for (int i = 0; i < xData.duration; ++i)
+    {
+        sumsquarex += (xn[i] * xn[i]);
+    }
+
+    for (int i = 0; i < yData.duration; ++i) {
+        sumsquarey += (yn[i] * yn[i]);
+    }
+    //return sumsquarey;
+    //return sumsquarex;
+    //cross corr
+    double crosscorr[duration];
+    for (int i = 0; i < duration; ++i)
+    {
+        for (int j = 0; j < duration; ++j)
+        {
+            crosscorr[i] += (xn[j] * yn[j]);
+        }
+        double hold;
+        //placeholder
+        hold = yn[duration - 1];
+        for (int i = duration - 1; i > 0; --i)
+        {
+            yn[i] = yn[i - 1];
+        }
+        yn[0] = hold;
+    }
+
+
+
+    // normalize
+    double *normcorr = new double[duration];
+    //double normcorr[duration];
+    for (int i = 0; i < duration; i++)
+    {
+        normcorr[i] = crosscorr[i] / (sqrt(sumsquarex * sumsquarey));
+    }
+    //Shift
+    int indexdiff = abs(xData.index) - abs(yData.index);
+    int shift;
+    if (xData.duration > yData.duration)
+    {
+        shift = indexdiff - xData.duration + 1;
+    }
+    else
+    {
+        shift = indexdiff - yData.duration + 1;
+    }
+    //shift normcorr
+
+
+    for (int i = 0; i > shift; --i)
+    {
+        double tempvar = normcorr[0];
+        for (int j = 0; j < duration - 1; j++)
+        {
+            normcorr[j] = normcorr[j + 1];
+        }
+        normcorr[duration - 1] = tempvar;
+    }
+
+    //put into output file
+    ofstream output(argv[3]);
+    if (duration < 20)
+    {
+        cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
+        output << shift << "\t" << normcorr[0] << endl;
+        cout << shift << ":\t" << normcorr[0] << endl;
+        for (int i = 0; i < duration - 1; ++i)
+        {
+            cout << shift + i + 1 << ":\t" << normcorr[i + 1] << endl;
+            output << "\t" << normcorr[i + 1] << endl;
+        }
+    }
+    else
+    {
+        cout << "Output file generated " << argv[3] << " duration: " << duration << endl;
+        output << shift << "\t" << normcorr[0] << endl;
+        cout << shift << "Output duration too long for console file generated instead"<< endl;
+        for (int i = 0; i < duration - 1; ++i)
+        {
+            output << "\t" << normcorr[i + 1] << endl;
+        }
+    }
+
+    output.close();
+
     return 0;
 }
 
