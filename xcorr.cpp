@@ -28,7 +28,7 @@ bool firstLineInputValidation(string lineToCheck)
   firstC = true;
  }
 
- cout << "space count: " << spaceCount << endl;
+//  cout << "space count: " << spaceCount << endl;
 
  if(spaceCount>0)
  {
@@ -67,23 +67,24 @@ class Signal
 
      if (isThereIndex == 1)
      {
-      cout << "yes theres index" << endl;
+    //   cout << "yes theres index" << endl;
 
       istringstream divideFirstLine(firstLine);
       
       string strIndex, strFirstValue;
       divideFirstLine >> strIndex >> strFirstValue;
 
-      cout << "index: " << strIndex << "\t first: " << strFirstValue << endl;
+    //   cout << "index: " << strIndex << "\t first: " << strFirstValue << endl;
 
       this->index = stoi(strIndex);
       signalData.push_back(stod(strFirstValue));
-
-      cout << "index int works: " << this->index << "\t first value in vector works: " << signalData[0] << endl;
+      
+    //   cout << "an index was found" << endl;
+    //   cout << "index: " << this->index << "\t first value in vector: " << signalData[0] << endl;
 
      } if (isThereIndex == 0)
      {
-      cout << "no no index" << endl;
+    //   cout << "no no index" << endl;
       this->index = 0;
 
       signalData.push_back(stod(firstLine));
@@ -100,7 +101,7 @@ class Signal
      //set duration
      this->duration = signalData.size();
 
-     cout << "duration of signal is " << this->duration << endl;
+    //  cout << "duration of signal is " << this->duration << endl;
     }
   }
 };
